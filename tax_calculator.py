@@ -70,9 +70,6 @@ class OrderItem:
         '''
 
         self.net_total = self.net_price * self.quantity
-        print(Fraction(tax_rate, 100) + 1)
-        print(self.net_total)
-        print(self.net_total * (Fraction(tax_rate, 100) + 1))
         self.total = round(self.net_total * (Fraction(tax_rate, 100) + 1), 2)
 
         return self
@@ -99,18 +96,6 @@ class Order:
         self.tax = self.total - self.net_total
 
         return self
-
-
-def fill_tax_fields(orders: list[Order], tax_rate: int) -> list[Order]:
-    '''
-    tax_rate : int
-            Wysokość podatku wyrażona w procentach
-    '''
-
-    for o in orders:
-        o.fill_tax_fields(tax_rate)
-
-    return orders
 
 
 # Testy
@@ -224,7 +209,7 @@ def test_tax_filling_of_order_items(item, tax_rate, target):
     (
         Order([
             OrderItem(Fraction(2137, 100), 5),
-            OrderItem(Fraction(130, 100), 3),
+            OrderItem(Fraction(131, 100), 3),
         ]),
         10,
         Order(
@@ -236,15 +221,15 @@ def test_tax_filling_of_order_items(item, tax_rate, target):
                     Fraction(23508, 200),
                 ),
                 OrderItem(
-                    Fraction(130, 100),
+                    Fraction(131, 100),
                     3,
-                    Fraction(390, 100),
-                    Fraction(429, 100),
+                    Fraction(393, 100),
+                    Fraction(432, 100),
                 ),
             ],
-            Fraction(11075, 100),
+            Fraction(11078, 100),
             Fraction(2216, 200),
-            Fraction(24366, 200),
+            Fraction(24372, 200),
         ),
     ),
 ])
@@ -252,12 +237,3 @@ def test_tax_filling_of_orders(order, tax_rate, target):
     processed = order.fill_tax_fields(tax_rate)
     assert processed is order
     assert processed == target
-
-
-@pytest.mark.parametrize("orders,tax_rate,target", [
-])
-def test_tax_filling_of_order_lists(orders, tax_rate, target):
-    processed = fill_tax_fields(orders, tax_rate)
-    assert processed is orders
-    assert processed == target
-
